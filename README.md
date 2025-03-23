@@ -159,8 +159,9 @@ src/
 ## Future Enhancements
 
 - CRUD operations for managing business rules through the API (bonus task 1)
+-- Storing the weather phenomenons and fees in the database as well
 - Caching for weather data to reduce external API calls
 - Metrics and monitoring for the weather data fetching job
 - Support for additional cities and vehicle types
-- 
+
  © 2025 
