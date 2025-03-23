@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -66,9 +67,23 @@ public class DeliveryFeeControllerIntegrationTest {
     @Test
     @DisplayName("Return error for Bike in extreme wind")
     void errorForBikeInExtremeWind() throws Exception {
-        // Setup test data
-        setupCurrentWeatherData();
+        // Setup test data with extreme wind conditions
+        WeatherData extremeWindData = WeatherData.builder()
+                .stationName("Pärnu")
+                .airTemperature(10.0)
+                .windSpeed(25.0) // Extreme wind over 20.0 m/s
+                .weatherPhenomenon("clear")
+                .timestamp(LocalDateTime.now())
+                .build();
 
+        weatherDataRepository.save(extremeWindData);
+
+        // Verify the data exists
+        Optional<WeatherData> saved = weatherDataRepository.findLatestByStationName("Pärnu");
+        assertThat(saved).isPresent();
+        saved.ifPresent(data -> assertThat(data.getWindSpeed()).isGreaterThan(20.0));
+
+        // Make the API call
         mockMvc.perform(get("/api/delivery-fee/PARNU/BIKE")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
