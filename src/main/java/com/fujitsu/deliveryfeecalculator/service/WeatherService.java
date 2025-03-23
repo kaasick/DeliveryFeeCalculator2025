@@ -11,13 +11,5 @@ public interface WeatherService {
      */
     WeatherData getLatestWeatherData(City city);
 
-    /**
-     * Get weather data for a city closest to the provided timestamp.
-     */
-    WeatherData getWeatherDataByTimestamp(City city, LocalDateTime timestamp);
-
-    /**
-     * Fetch fresh weather data from the external service.
-     */
     void fetchAndStoreWeatherData();
 }

@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,13 +48,6 @@ public class WeatherServiceImpl implements WeatherService {
         return weatherDataRepository.findLatestByStationName(city.getStationName())
                 .orElseThrow(() -> new WeatherDataNotFoundException(
                         "No weather data available for station: " + city.getStationName()));
-    }
-
-    @Override
-    public WeatherData getWeatherDataByTimestamp(City city, LocalDateTime timestamp) {
-        return weatherDataRepository.findClosestByStationNameAndTimestamp(city.getStationName(), timestamp)
-                .orElseThrow(() -> new WeatherDataNotFoundException(
-                        "No weather data available for station: " + city.getStationName() + " around timestamp: " + timestamp));
     }
 
     @Override

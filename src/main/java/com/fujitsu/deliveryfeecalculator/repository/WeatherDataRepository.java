@@ -21,8 +21,7 @@ public interface WeatherDataRepository extends JpaRepository<WeatherData, Long> 
     /**
      * Find the weather data for a specific station closest to the provided timestamp.
      */
-    @Query("SELECT w FROM WeatherData w WHERE w.stationName = :stationName " +
-            "ORDER BY ABS(FUNCTION('UNIX_TIMESTAMP', w.timestamp) - FUNCTION('UNIX_TIMESTAMP', :timestamp)) ASC LIMIT 1")
+    @Query("SELECT w FROM WeatherData w WHERE w.stationName = :stationName AND w.timestamp <= :timestamp ORDER BY w.timestamp DESC LIMIT 1")
     Optional<WeatherData> findClosestByStationNameAndTimestamp(
             @Param("stationName") String stationName,
             @Param("timestamp") LocalDateTime timestamp);
