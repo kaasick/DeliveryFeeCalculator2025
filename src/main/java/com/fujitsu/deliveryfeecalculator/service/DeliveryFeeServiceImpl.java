@@ -62,9 +62,8 @@ public class DeliveryFeeServiceImpl implements DeliveryFeeService {
 
     @Override
     public BigDecimal calculateFee(City city, VehicleType vehicleType, LocalDateTime timestamp) {
-        //WeatherData weatherData = weatherService.getWeatherDataByTimestamp(city, timestamp);
-        //return calculateFeeInternal(city, vehicleType, weatherData);
-        return null;
+        WeatherData weatherData = weatherService.getWeatherDataByTimestamp(city, timestamp);
+        return calculateFeeInternal(city, vehicleType, weatherData);
     }
 
     /**

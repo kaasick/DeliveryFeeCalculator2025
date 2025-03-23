@@ -1,10 +1,13 @@
 package com.fujitsu.deliveryfeecalculator.model.enums;
 
 
+import lombok.Getter;
+
 /**
  * Enumeration representing available cities for delivery service.
  * Each city has an associated weather station name.
  */
+@Getter
 public enum City {
     TALLINN("Tallinn-Harku"),
     TARTU("Tartu-Tõravere"),
@@ -23,20 +26,5 @@ public enum City {
      */
     public String getStationName() {
         return stationName;
-    }
-
-    /**
-     * Find a city by station name.
-     *
-     * @param stationName the name of the weather station
-     * @return the matching City or null if not found
-     */
-    public static City findByStationName(String stationName) {
-        for (City city : values()) {
-            if (city.getStationName().equals(stationName)) {
-                return city;
-            }
-        }
-        return null;
     }
 }

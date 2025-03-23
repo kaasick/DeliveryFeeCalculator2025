@@ -2,12 +2,14 @@ package com.fujitsu.deliveryfeecalculator.controller;
 
 import com.fujitsu.deliveryfeecalculator.exception.DeliveryFeeCalculationException;
 import com.fujitsu.deliveryfeecalculator.dto.DeliveryFeeResponse;
+import com.fujitsu.deliveryfeecalculator.exception.WeatherDataNotFoundException;
 import com.fujitsu.deliveryfeecalculator.model.enums.City;
 import com.fujitsu.deliveryfeecalculator.model.enums.VehicleType;
 import com.fujitsu.deliveryfeecalculator.service.DeliveryFeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,7 @@ public class DeliveryFeeController {
     /**
      * Calculate delivery fee based on city and vehicle type.
      *
-     * @param city The city (TALLINN, TARTU, PARNU)
+     * @param city        The city (TALLINN, TARTU, PARNU)
      * @param vehicleType The vehicle type (CAR, SCOOTER, BIKE)
      * @return Delivery fee or error message
      */
@@ -61,9 +63,9 @@ public class DeliveryFeeController {
     /**
      * Calculate delivery fee based on city, vehicle type, and specific datetime.
      *
-     * @param city The city (TALLINN, TARTU, PARNU)
+     * @param city        The city (TALLINN, TARTU, PARNU)
      * @param vehicleType The vehicle type (CAR, SCOOTER, BIKE)
-     * @param datetime The datetime for historical calculation
+     * @param datetime    The datetime for historical calculation
      * @return Delivery fee or error message
      */
     @GetMapping("/{city}/{vehicleType}/at")
@@ -80,14 +82,18 @@ public class DeliveryFeeController {
 
             return ResponseEntity.ok(new DeliveryFeeResponse(fee));
         } catch (DeliveryFeeCalculationException e) {
-            log.warn("Delivery calculation restriction: {}", e.getMessage());
+            log.warn("Delivery calculation restriction for historical data: {}", e.getMessage());
             return ResponseEntity.badRequest().body(new DeliveryFeeResponse(e.getMessage()));
+        } catch (WeatherDataNotFoundException e) {
+            log.warn("Weather data not found: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new DeliveryFeeResponse(e.getMessage()));
         } catch (IllegalArgumentException e) {
-            log.warn("Invalid input: {}", e.getMessage());
+            log.warn("Invalid params: {}", e.getMessage());
             return ResponseEntity.badRequest()
                     .body(new DeliveryFeeResponse("Invalid parameters provided"));
         } catch (Exception e) {
-            log.error("Error calculating delivery fee", e);
+            log.error("Error calculating historical delivery fee", e);
             return ResponseEntity.internalServerError()
                     .body(new DeliveryFeeResponse("An unexpected error occurred"));
         }

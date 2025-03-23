@@ -30,11 +30,9 @@ public enum WeatherPhenomenon {
         this.phenomena = phenomena;
     }
 
-    public Set<String> getPhenomena() {
-        return phenomena;
-    }
-
-    /** Categorize a weather phenomenon string into one of the enum values. */
+    /**
+     * Categorize a weather phenomenon string into one of the enum values.
+     */
     public static WeatherPhenomenon categorize(String phenomenonStr) {
         if (phenomenonStr == null || phenomenonStr.trim().isEmpty()) {
             return NORMAL;
@@ -69,7 +67,9 @@ public enum WeatherPhenomenon {
         return NORMAL;
     }
 
-    /** Check if this weather category forbids vehicle usage. */
+    /**
+     * Check if this weather category forbids vehicle usage.
+     */
     public boolean isUsageForbidden() {
         return this == FORBIDDEN;
     }

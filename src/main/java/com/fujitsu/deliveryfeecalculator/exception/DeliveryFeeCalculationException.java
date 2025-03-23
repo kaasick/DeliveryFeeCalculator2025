@@ -15,14 +15,4 @@ public class DeliveryFeeCalculationException extends RuntimeException {
     public DeliveryFeeCalculationException(String message) {
         super(message);
     }
-
-    /**
-     * Constructs a new delivery fee calculation exception with the specified detail message and cause.
-     *
-     * @param message the detail message
-     * @param cause the cause of the exception
-     */
-    public DeliveryFeeCalculationException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }
